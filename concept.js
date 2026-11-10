@@ -80,10 +80,15 @@ let firstFrame = true;
 
 const INK = "#23201c", MUTED = "#6d665c", ACCENT = "#2f5fb3", ALERT = "#b9522c", LINE = "rgba(35,32,28,0.16)";
 
+let player = null;
+
 function fit() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.max(1, canvas.clientWidth * dpr);
   canvas.height = Math.max(1, canvas.clientHeight * dpr);
+  // Resizing clears the canvas; redraw the current time immediately so a
+  // paused or finished scene never goes blank.
+  if (player) player.render(); else drawScene(0);
 }
 new ResizeObserver(fit).observe(canvas);
 fit();
@@ -253,6 +258,6 @@ function label(text, x, y, u, color = MUTED) {
 }
 
 // ---- wire up ------------------------------------------------------------------
-const player = new TimelinePlayer({ steps, duration, onFrame: drawScene });
+player = new TimelinePlayer({ steps, duration, onFrame: drawScene });
 wireThemeToggle();
 if (!matchMedia("(prefers-reduced-motion: reduce)").matches) player.play();
