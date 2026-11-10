@@ -1,0 +1,22 @@
+[
+  {
+    "file": "index.html",
+    "sha256": "6a23f126c6cf445393490fa34c93792a6ce7fd05739c125026d2dbea0f6be20a"
+  },
+  {
+    "file": "style.css",
+    "sha256": "ee1f0a0756a960b3005ca7727165e445f1e49bca620937b5b304f582fcc9af35"
+  },
+  {
+    "file": "concept.js",
+    "sha256": "d9a7abf8701ec7d14cc4584741d43ffda8c78fd30166836868ac66421e12a76c"
+  },
+  {
+    "file": "player.js",
+    "sha256": "0b7a570469c56c25fd964bb9fd5c6c25c33af216a829db37ae006838e677792f"
+  },
+  {
+    "file": "og/load-balancer.png",
+    "sha256": "ef82adc38fbdcb7cf4f363c627eb67cd3b24a820bcba7a80a617287991035046"
+  }
+]
