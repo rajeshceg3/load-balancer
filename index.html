@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("theme")==="dark"?"dark":"light"}catch(e){}</script>
+<title>Load balancer, up close</title>
+<meta name="description" content="Watch requests queue, overflow and then spread across servers, scrubbed step by step on a simulated balancer.">
+<meta property="og:title" content="Load balancer, up close">
+<meta property="og:description" content="Watch requests queue, overflow and then spread across servers, scrubbed step by step on a simulated balancer.">
+<meta property="og:image" content="og/load-balancer.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="preload" as="image" href="og/load-balancer.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-head">
+  <span class="mark">Load balancer, up close</span>
+  <nav class="site-nav" aria-label="Main">
+    <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme">
+      <svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5 5l1.8 1.8M17.2 17.2 19 19M19 5l-1.8 1.8M6.8 17.2 5 19"/></svg>
+      <svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <h1>Watch a <em>load balancer</em> share the work.</h1>
+    <p class="sub">Requests queue behind one server, then a balancer deals them across three, and routes around a failure. Drag through it, slow it down.</p>
+    <p class="honest">A simulation, not production traffic. Every pass plays the same fixed arrivals, so you can scrub back and forth.</p>
+  </section>
+
+  <section class="stage" aria-label="Simulation of requests flowing through a load balancer">
+    <p class="hint">Drag the timeline · play to watch</p>
+    <img class="poster" src="og/load-balancer.png" alt="The finished simulation: requests spread across three servers" data-hidden="false">
+    <canvas class="scene" aria-label="Simulation view. Clients on the left, the load balancer in the middle, three servers on the right."></canvas>
+
+    <div class="player" role="region" aria-label="Playback">
+      <p class="step-line"><span class="step-num" id="stepNum">1/6</span><span id="stepLabel">One client, one server</span></p>
+      <div class="bar">
+        <button class="play" type="button" id="playBtn" aria-label="Pause">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path class="play-glyph" d="M8 5.5v13l11-6.5Z"/></svg>
+        </button>
+        <div class="track">
+          <div class="rail"><div class="ready"></div><div class="played" id="playedFill"></div></div>
+          <ol class="ticks" id="ticks"></ol>
+          <input class="scrub" id="scrub" type="range" min="0" max="1000" value="0" aria-label="Timeline">
+        </div>
+        <span class="clock" id="clock">0.0s</span>
+        <div class="speed" role="radiogroup" aria-label="Playback speed" id="speeds">
+          <label><input type="radio" name="speed" value="0.25"><span>¼×</span></label>
+          <label><input type="radio" name="speed" value="0.5"><span>½×</span></label>
+          <label><input type="radio" name="speed" value="1" checked><span>1×</span></label>
+          <label><input type="radio" name="speed" value="2"><span>2×</span></label>
+        </div>
+        <button class="round" type="button" id="loopBtn" aria-label="Loop playback" aria-pressed="false">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 2.5 21 6l-4 3.5"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="m7 21.5-4-3.5 4-3.5"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></svg>
+        </button>
+        <button class="round" type="button" id="resetBtn" aria-label="Reset view">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4"/><path d="M3 4v4h4"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <article class="detail">
+    <h2>What it's for</h2>
+    <ul>
+      <li>Spread requests so no single server becomes the bottleneck.</li>
+      <li>Keep answering when one machine fails, by sending traffic elsewhere.</li>
+      <li>Grow by adding ordinary servers instead of buying a bigger one.</li>
+    </ul>
+    <h2>Good to know</h2>
+    <p>Round-robin is simple but blind: it treats a fast server and a slow one as equal. Least-connections watches how busy each server actually is, which is why the fast server ends up doing more of the work here. Real balancers also terminate TLS, pin sessions and retry failed requests; none of that is shown.</p>
+    <h2>How it works, step by step</h2>
+    <ol class="step-list" id="stepList"></ol>
+    <h2>Before you rely on it</h2>
+    <p>This is a teaching model. Arrivals are fixed, service times are averages, and there is no network jitter, no retries and no consistent hashing. For real designs, read the current NGINX, HAProxy or your cloud balancer's documentation.</p>
+  </article>
+</main>
+
+<script type="module" src="concept.js"></script>
+</body>
+</html>
